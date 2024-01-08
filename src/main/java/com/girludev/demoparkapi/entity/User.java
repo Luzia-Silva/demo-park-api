@@ -26,13 +26,13 @@ public class User implements Serializable {
 	private Role role;
 	
 	@Column(name = "creation_date")
-	private LocalDateTime dataCriacao;
+	private LocalDateTime creation_date;
 	@Column(name = "modification_date")
-	private LocalDateTime dataModificacao;
+	private LocalDateTime dmodification_date;
 	@Column(name = "created_by")
-	private String criadoPor;
+	private String created_by;
 	@Column(name = "modified_by")
-	private String modificadoPor;
+	private String modified_by;
 	
 	public enum Role {
 		ROLE_ADMIN, ROLE_CLIENTE
@@ -40,10 +40,10 @@ public class User implements Serializable {
 	
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this==o) return true;
+		if (o==null || getClass()!=o.getClass()) return false;
 		User user = (User) o;
-		return Objects.equals(id, user.id);
+		return id.equals(user.id);
 	}
 	
 	@Override
