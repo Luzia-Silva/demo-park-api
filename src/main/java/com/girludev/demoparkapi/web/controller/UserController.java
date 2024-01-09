@@ -2,6 +2,10 @@ package com.girludev.demoparkapi.web.controller;
 
 import com.girludev.demoparkapi.entity.User;
 import com.girludev.demoparkapi.service.UserService;
+import com.girludev.demoparkapi.web.controller.dto.UserCreateDTO;
+import com.girludev.demoparkapi.web.controller.dto.UserPasswordDTO;
+import com.girludev.demoparkapi.web.controller.dto.UserResponseDTO;
+import com.girludev.demoparkapi.web.controller.dto.mapper.UserMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,26 +21,26 @@ public class UserController {
 	private final UserService userService;
 	
 	@GetMapping
-	public ResponseEntity<List<User>> getAll(){
+	public ResponseEntity<List<UserResponseDTO>> getAll(){
 		List<User> users =  userService.finAllUsers();
-		return ResponseEntity.status(HttpStatus.OK).body(users);
+		return ResponseEntity.status(HttpStatus.OK).body(UserMapper.toListResponse(users));
 	}
 	
 	@PostMapping
-	public ResponseEntity<User> create(@RequestBody User user){
-		User userSave = userService.save(user);
-		return ResponseEntity.status(HttpStatus.CREATED).body(userSave);
+	public ResponseEntity<UserResponseDTO> create(@RequestBody UserCreateDTO createDTO){
+		User userSave = userService.save(UserMapper.toUserCreate(createDTO));
+		return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toUserResponse(userSave));
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<User> getById(@PathVariable Long id){
+	public ResponseEntity<UserResponseDTO> getById(@PathVariable Long id){
 		User userById = userService.searchById(id);
-		return ResponseEntity.ok(userById);
+		return ResponseEntity.ok(UserMapper.toUserResponse(userById));
 	}
 	@PatchMapping("/{id}")
-	public ResponseEntity<User> updatePassword(@PathVariable Long id, @RequestBody User user){
-		User passwordTheUser = userService.PasswordEdit(id, user.getPassword());
-		return ResponseEntity.ok(passwordTheUser);
+	public ResponseEntity<Void> updatePassword(@PathVariable Long id, @RequestBody UserPasswordDTO passwordDTO){
+		userService.PasswordEdit(id, passwordDTO.getPassword(), passwordDTO.getNewPassword(), passwordDTO.getConfirmPassword());
+		return ResponseEntity.noContent().build();
 	}
 	
 }

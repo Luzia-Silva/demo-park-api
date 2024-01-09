@@ -28,14 +28,21 @@ public class UserService {
 	}
 	
 	@Transactional
-	public User PasswordEdit(Long id, String password) {
-		User passwordTheUser = searchById(id);
-		passwordTheUser.setPassword(password);
-		return passwordTheUser;
-	}
-	@Transactional
 	public List<User> finAllUsers() {
 		return userRepository.findAll();
 		
+	}
+	
+	@Transactional
+	public User PasswordEdit(Long id, String password, String newPassword, String confirmPassword) {
+		if(!newPassword.equals(confirmPassword)){
+			throw new RuntimeException("The new password is not the same as confirmation!");
+		}
+		User passwordTheUser = searchById(id);
+		if(!passwordTheUser.getPassword().equals(password)){
+			throw new RuntimeException("The password does not match the one created previously");
+		}
+		passwordTheUser.setPassword(newPassword);
+		return passwordTheUser;
 	}
 }
