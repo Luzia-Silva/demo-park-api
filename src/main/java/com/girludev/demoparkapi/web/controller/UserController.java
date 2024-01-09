@@ -6,7 +6,7 @@ import com.girludev.demoparkapi.web.controller.dto.UserCreateDTO;
 import com.girludev.demoparkapi.web.controller.dto.UserPasswordDTO;
 import com.girludev.demoparkapi.web.controller.dto.UserResponseDTO;
 import com.girludev.demoparkapi.web.controller.dto.mapper.UserMapper;
-import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +27,7 @@ public class UserController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<UserResponseDTO> create(@RequestBody UserCreateDTO createDTO){
+	public ResponseEntity<UserResponseDTO> create(@Valid @RequestBody UserCreateDTO createDTO){
 		User userSave = userService.save(UserMapper.toUserCreate(createDTO));
 		return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toUserResponse(userSave));
 	}
