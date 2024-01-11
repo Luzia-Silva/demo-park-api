@@ -1,8 +1,8 @@
-package com.girludev.demoparkapi.web.controller.dto.mapper;
+package com.girludev.demoparkapi.web.dto.mapper;
 
 import com.girludev.demoparkapi.entity.User;
-import com.girludev.demoparkapi.web.controller.dto.UserCreateDTO;
-import com.girludev.demoparkapi.web.controller.dto.UserResponseDTO;
+import com.girludev.demoparkapi.web.dto.UserCreateDTO;
+import com.girludev.demoparkapi.web.dto.UserResponseDTO;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 

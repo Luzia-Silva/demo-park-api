@@ -1,4 +1,4 @@
-package com.girludev.demoparkapi.web.controller.dto;
+package com.girludev.demoparkapi.web.dto;
 
 import lombok.*;
 

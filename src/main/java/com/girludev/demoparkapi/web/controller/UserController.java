@@ -2,10 +2,10 @@ package com.girludev.demoparkapi.web.controller;
 
 import com.girludev.demoparkapi.entity.User;
 import com.girludev.demoparkapi.service.UserService;
-import com.girludev.demoparkapi.web.controller.dto.UserCreateDTO;
-import com.girludev.demoparkapi.web.controller.dto.UserPasswordDTO;
-import com.girludev.demoparkapi.web.controller.dto.UserResponseDTO;
-import com.girludev.demoparkapi.web.controller.dto.mapper.UserMapper;
+import com.girludev.demoparkapi.web.dto.UserCreateDTO;
+import com.girludev.demoparkapi.web.dto.UserPasswordDTO;
+import com.girludev.demoparkapi.web.dto.UserResponseDTO;
+import com.girludev.demoparkapi.web.dto.mapper.UserMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -38,7 +38,7 @@ public class UserController {
 		return ResponseEntity.ok(UserMapper.toUserResponse(userById));
 	}
 	@PatchMapping("/{id}")
-	public ResponseEntity<Void> updatePassword(@PathVariable Long id, @RequestBody UserPasswordDTO passwordDTO){
+	public ResponseEntity<Void> updatePassword(@PathVariable Long id,@Valid @RequestBody UserPasswordDTO passwordDTO){
 		userService.PasswordEdit(id, passwordDTO.getPassword(), passwordDTO.getNewPassword(), passwordDTO.getConfirmPassword());
 		return ResponseEntity.noContent().build();
 	}

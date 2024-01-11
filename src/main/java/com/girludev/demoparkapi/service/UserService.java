@@ -30,7 +30,6 @@ public class UserService {
 	@Transactional
 	public List<User> finAllUsers() {
 		return userRepository.findAll();
-		
 	}
 	
 	@Transactional
