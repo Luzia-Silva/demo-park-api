@@ -1,5 +1,6 @@
 package com.girludev.demoparkapi.web.exception;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.ToString;
@@ -23,10 +24,17 @@ public class ErrorMessage {
 	private String statusText;
 	
 	private String message;
-	
+
+	@JsonInclude(JsonInclude.Include.NON_NULL) //Verifica se esta null se estiver não é enviado o campo!
 	private Map<String, String> errors;
-	
-	
+
+	public ErrorMessage(HttpServletRequest request, HttpStatus status, String message) {
+		this.path = request.getRequestURI();
+		this.method = request.getMethod();
+		this.status = status.value();
+		this.statusText = status.getReasonPhrase();
+		this.message = message;
+	}
 	public ErrorMessage(HttpServletRequest request, HttpStatus status, String message, BindingResult bindingResult) {
 		this.path = request.getRequestURI();
 		this.method = request.getMethod();
@@ -35,7 +43,7 @@ public class ErrorMessage {
 		this.message = message;
 		addErros(bindingResult);
 	}
-	
+
 	private void addErros(BindingResult bindingResult) {
 		this.errors = new HashMap<>();
 		for (FieldError fieldError : bindingResult.getFieldErrors()){
