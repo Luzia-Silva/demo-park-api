@@ -19,15 +19,12 @@ public class UserService {
 	
 	@Transactional // anotação faz processo de abrir e fechar para SAVE
 	public User save(User user) {
-
 		try{
 			return userRepository.save(user);//esse método save já está inclusa no JPA
 		}catch (DataIntegrityViolationException dataIntegrityViolationException){
 			throw new UsernameUniqueViolationException(String.format("already registered username {%s}", user.getUsername()));
 
 		}
-
-
 	}
 	
 	@Transactional
@@ -41,9 +38,8 @@ public class UserService {
 	public List<User> finAllUsers() {
 		return userRepository.findAll();
 	}
-	
 	@Transactional
-	public User PasswordEdit(Long id, String password, String newPassword, String confirmPassword) {
+	public User passwordEdit(Long id, String password, String newPassword, String confirmPassword) {
 		if(!newPassword.equals(confirmPassword)){
 			throw new PasswordInvalidException("The new password is not the same as confirmation");
 		}
@@ -54,4 +50,15 @@ public class UserService {
 		passwordTheUser.setPassword(newPassword);
 		return passwordTheUser;
 	}
+
+	@Transactional
+	public User deleteById(Long id) {
+		User idUser = searchById(id);
+		if(idUser != null) {
+			userRepository.deleteById(id);
+		}else {
+			throw new UserIdEntityNotFoundException("User not found");
+		}
+        return null;
+    }
 }
