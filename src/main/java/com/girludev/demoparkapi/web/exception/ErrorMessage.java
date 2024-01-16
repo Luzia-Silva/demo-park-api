@@ -16,17 +16,17 @@ import java.util.Map;
 @ToString
 public class ErrorMessage {
 	private String path;
-	
 	private String method;
-	
 	private int status;
-	
 	private String statusText;
-	
 	private String message;
 
-	@JsonInclude(JsonInclude.Include.NON_NULL) //Verifica se esta null se estiver não é enviado o campo!
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private Map<String, String> errors;
+
+	// Default constructor
+	public ErrorMessage() {
+	}
 
 	public ErrorMessage(HttpServletRequest request, HttpStatus status, String message) {
 		this.path = request.getRequestURI();
@@ -35,18 +35,19 @@ public class ErrorMessage {
 		this.statusText = status.getReasonPhrase();
 		this.message = message;
 	}
+
 	public ErrorMessage(HttpServletRequest request, HttpStatus status, String message, BindingResult bindingResult) {
 		this.path = request.getRequestURI();
 		this.method = request.getMethod();
 		this.status = status.value();
 		this.statusText = status.getReasonPhrase();
 		this.message = message;
-		addErros(bindingResult);
+		addErrors(bindingResult);
 	}
 
-	private void addErros(BindingResult bindingResult) {
+	private void addErrors(BindingResult bindingResult) {
 		this.errors = new HashMap<>();
-		for (FieldError fieldError : bindingResult.getFieldErrors()){
+		for (FieldError fieldError : bindingResult.getFieldErrors()) {
 			this.errors.put(fieldError.getField(), fieldError.getDefaultMessage());
 		}
 	}

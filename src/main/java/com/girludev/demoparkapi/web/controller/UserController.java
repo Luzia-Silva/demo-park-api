@@ -76,7 +76,7 @@ public class UserController {
 			@ApiResponse(responseCode = "404",
 					description = "Id already exists in the database.",
 					content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
-			@ApiResponse(responseCode = "400",
+			@ApiResponse(responseCode = "422",
 					description = "Passwords don't match.",
 					content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
 	})
