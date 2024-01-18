@@ -1,6 +1,6 @@
 package com.girludev.demoparkapi;
 
-import com.girludev.demoparkapi.web.dto.UserResponseDTO;
+import com.girludev.demoparkapi.web.dto.user.UserResponseDTO;
 import com.girludev.demoparkapi.web.exception.ErrorMessage;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

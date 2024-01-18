@@ -5,9 +5,11 @@ import com.girludev.demoparkapi.exception.PasswordInvalidException;
 import com.girludev.demoparkapi.exception.UserIdEntityNotFoundException;
 import com.girludev.demoparkapi.exception.UsernameUniqueViolationException;
 import com.girludev.demoparkapi.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,12 +17,16 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class UserService {
+
 	private final UserRepository userRepository;
-	
-	@Transactional // anotação faz processo de abrir e fechar para SAVE
+
+	private final PasswordEncoder passwordEncoder;
+
+	@Transactional
 	public User save(User user) {
 		try{
-			return userRepository.save(user);//esse método save já está inclusa no JPA
+			user.setPassword(passwordEncoder.encode(user.getPassword()));
+			return userRepository.save(user);
 		}catch (DataIntegrityViolationException dataIntegrityViolationException){
 			throw new UsernameUniqueViolationException(String.format("already registered username {%s}", user.getUsername()));
 
@@ -43,12 +49,12 @@ public class UserService {
 		if(!newPassword.equals(confirmPassword)){
 			throw new PasswordInvalidException("The new password is not the same as confirmation");
 		}
-		User passwordTheUser = searchById(id);
-		if(!passwordTheUser.getPassword().equals(password)){
-			throw new PasswordInvalidException("The password does not match the one created previously");
+		User user = searchById(id);
+		if(!passwordEncoder.matches(password, user.getPassword())){
+			throw new PasswordInvalidException("Passwords do not match");
 		}
-		passwordTheUser.setPassword(newPassword);
-		return passwordTheUser;
+		user.setPassword(passwordEncoder.encode(newPassword));
+		return user;
 	}
 
 	@Transactional
@@ -61,4 +67,15 @@ public class UserService {
 		}
         return null;
     }
+	@Transactional
+	public User searchByUsername(String username) {
+		return userRepository.findByUsername(username).orElseThrow(
+				() -> new EntityNotFoundException(String.format("User with 'username' not found", username))
+		);
+	}
+
+	@Transactional
+	public User.Role searchRoleByUsername(String username) {
+		return userRepository.findRoleByUsername(username);
+	}
 }

@@ -1,12 +1,10 @@
 package com.girludev.demoparkapi.web.controller;
 
 import com.girludev.demoparkapi.entity.User;
-import com.girludev.demoparkapi.exception.PasswordInvalidException;
-import com.girludev.demoparkapi.exception.UserIdEntityNotFoundException;
 import com.girludev.demoparkapi.service.UserService;
-import com.girludev.demoparkapi.web.dto.UserCreateDTO;
-import com.girludev.demoparkapi.web.dto.UserPasswordDTO;
-import com.girludev.demoparkapi.web.dto.UserResponseDTO;
+import com.girludev.demoparkapi.web.dto.user.UserCreateDTO;
+import com.girludev.demoparkapi.web.dto.user.UserPasswordDTO;
+import com.girludev.demoparkapi.web.dto.user.UserResponseDTO;
 import com.girludev.demoparkapi.web.dto.mapper.UserMapper;
 import com.girludev.demoparkapi.web.exception.ErrorMessage;
 import io.swagger.v3.oas.annotations.Operation;
