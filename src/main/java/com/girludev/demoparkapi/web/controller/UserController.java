@@ -11,34 +11,46 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Tag(name = "Users", description = "Operation about users")
 @RequiredArgsConstructor
-@RestController // Entende essa Class é um Bin para request do tipo REST
-@RequestMapping("api/v1/users") // path de acesso aos recursos
+@RestController
+@RequestMapping("api/v1/users")
 public class UserController {
+
 	private final UserService userService;
 
-	@Operation(summary = "Search users", description="Resource search users", responses = {
+	@Operation(summary = "Search users", description="Restricted request requires a Bearer Token (ADMIN)",
+			security = @SecurityRequirement(name = "security"),
+			responses = {
 			@ApiResponse(responseCode = "200",
 					description = "Resource to search users.",
 					content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDTO.class))),
-	})
+			@ApiResponse(responseCode = "403",
+					description = "Unauthenticated user.",
+					content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
+			})
 	@GetMapping
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<List<UserResponseDTO>> getAll(){
 		List<User> users =  userService.finAllUsers();
 		return ResponseEntity.status(HttpStatus.OK).body(UserMapper.toListResponse(users));
 	}
-	
-	@Operation(summary = "Create new user", description="Resource create new user", responses = {
+
+
+
+	@Operation(summary = "Create new user", description="Resource create new user",
+			responses = {
 			@ApiResponse(responseCode = "201",
 							description = "Resource to successfully create user.",
 							content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDTO.class))),
@@ -54,23 +66,35 @@ public class UserController {
 		User userSave = userService.save(UserMapper.toUserCreate(createDTO));
 		return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toUserResponse(userSave));
 	}
-	@Operation(summary = "Search user by id", description="Resource search user by id", responses = {
+
+
+	@Operation(summary = "Search user by id", description="Restricted request requires a Bearer Token (ADMIN/CLIENT)",
+			security = @SecurityRequirement(name = "security"), responses = {
 			@ApiResponse(responseCode = "200",
 					description = "Resource to search user.",
 					content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDTO.class))),
+			@ApiResponse(responseCode = "403",
+					description = "Unauthenticated user.",
+					content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
 			@ApiResponse(responseCode = "404",
 					description = "Id already exists in the database.",
 					content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
 	})
 	@GetMapping("/{id}")
+	@PreAuthorize("hasRole('ADMIN') OR hasRole('CLIENTE') AND #id == authentication.principal.id ")
 	public ResponseEntity<UserResponseDTO> getById(@PathVariable Long id){
 		User userById = userService.searchById(id);
 		return ResponseEntity.ok(UserMapper.toUserResponse(userById));
 	}
-	@Operation(summary = "Upgrade password user", description="Resource upgrade password user", responses = {
+
+
+	@Operation(summary = "Upgrade password user", description="Restricted request requires a Bearer Token (ADMIN/CLIENT)", security = @SecurityRequirement(name = "security"),  responses = {
 			@ApiResponse(responseCode = "200",
 					description = "Resource to new password user.",
 					content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserPasswordDTO.class))),
+			@ApiResponse(responseCode = "403",
+					description = "Unauthenticated user.",
+					content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
 			@ApiResponse(responseCode = "404",
 					description = "Id already exists in the database.",
 					content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
@@ -79,20 +103,28 @@ public class UserController {
 					content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
 	})
 	@PatchMapping("/{id}")
+	@PreAuthorize("hasAnyRole('ADMIN', 'CLIENTE') AND (#id == authentication.principal.id)")
 	public ResponseEntity<Void> updatePassword(@PathVariable Long id,@Valid @RequestBody UserPasswordDTO passwordDTO){
 		userService.passwordEdit(id, passwordDTO.getPassword(), passwordDTO.getNewPassword(), passwordDTO.getConfirmPassword());
 		return ResponseEntity.noContent().build();
 	}
 
-	@Operation(summary = "Delete user", description="Resource delete user", responses = {
+
+	@Operation(summary = "Delete user", description="Restricted request requires a Bearer Token (ADMIN)",
+			security = @SecurityRequirement(name = "security"),
+			responses = {
 			@ApiResponse(responseCode = "200",
 					description = "Resource to delete user.",
 					content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDTO.class))),
+			@ApiResponse(responseCode = "403",
+					description = "Unauthenticated user.",
+					content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
 			@ApiResponse(responseCode = "404",
 					description = "Id already exists in the database.",
 					content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
 	})
 	@DeleteMapping("/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Void> delete(@PathVariable Long id){
 		userService.deleteById(id);
 		return ResponseEntity.status(HttpStatus.OK).body(null);

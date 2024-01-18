@@ -20,37 +20,37 @@ public class JwtAutherizationFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUserDetailsService jwtUserDetailsService;
 
-    private void toAuthentication(HttpServletRequest httpServletRequest, String username) {
+    private void toAuthentication(HttpServletRequest request, String username) {
         UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(username);
 
         UsernamePasswordAuthenticationToken authenticationToken = UsernamePasswordAuthenticationToken
                 .authenticated(userDetails, null, userDetails.getAuthorities());
 
-        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
+        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
     @Override
-    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        final String token = httpServletRequest.getHeader(JwtUtils.JWT_AUTHORIZATION);
+        final String token = request.getHeader(JwtUtils.JWT_AUTHORIZATION);
 
         if (token == null  || !token.startsWith(JwtUtils.JWT_BEARER)){
             log.info("JWT Token is null, empty or not started with 'Bearer ' .");
-            filterChain.doFilter(httpServletRequest, httpServletResponse);
+            filterChain.doFilter(request, response);
             return;
         }
         if (!JwtUtils.isTokenValid(token)) {
             log.info("JWT Token is invalid or expiring");
-            filterChain.doFilter(httpServletRequest, httpServletResponse);
+            filterChain.doFilter(request, response);
             return;
         }
 
         String username = JwtUtils.getUsernameFromToken(token);
 
-        toAuthentication(httpServletRequest, username);
+        toAuthentication(request, username);
 
-        filterChain.doFilter(httpServletRequest, httpServletResponse);
+        filterChain.doFilter(request, response);
     }
 
 }

@@ -28,7 +28,7 @@ public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("/auth")
-    public ResponseEntity<?> authentication(@RequestBody @Valid UserAuthDto userAuthDto, HttpServletRequest httpServletRequest){
+    public ResponseEntity<?> authentication(@RequestBody @Valid UserAuthDto userAuthDto, HttpServletRequest request){
         log.info("Process authentication by auth user", userAuthDto.getUsername());
         try{
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
@@ -39,6 +39,6 @@ public class AuthenticationController {
         }catch (AuthenticationException error){
             log.warn("Bad credential from username '{}' ", userAuthDto.getUsername());
         }
-        return ResponseEntity.badRequest().body( new ErrorMessage(httpServletRequest, HttpStatus.BAD_REQUEST, "Invalid credential"));
+        return ResponseEntity.badRequest().body( new ErrorMessage(request, HttpStatus.BAD_REQUEST, "Invalid credential"));
     }
 }
