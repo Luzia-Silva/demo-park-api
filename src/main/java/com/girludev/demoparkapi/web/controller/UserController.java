@@ -89,13 +89,12 @@ public class UserController {
 
 
 	@Operation(summary = "Upgrade password user", description="Restricted request requires a Bearer Token (ADMIN/CLIENT)", security = @SecurityRequirement(name = "security"),  responses = {
-			@ApiResponse(responseCode = "200",
-					description = "Resource to new password user.",
-					content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserPasswordDTO.class))),
+			@ApiResponse(responseCode = "204",
+					description = "Resource to new password user."),
 			@ApiResponse(responseCode = "403",
 					description = "Unauthenticated user.",
 					content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
-			@ApiResponse(responseCode = "404",
+			@ApiResponse(responseCode = "400",
 					description = "Id already exists in the database.",
 					content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
 			@ApiResponse(responseCode = "422",
