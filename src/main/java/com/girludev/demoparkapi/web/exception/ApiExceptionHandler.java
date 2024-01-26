@@ -1,5 +1,6 @@
 package com.girludev.demoparkapi.web.exception;
 
+import com.girludev.demoparkapi.exception.CpfUniqueViolationException;
 import com.girludev.demoparkapi.exception.PasswordInvalidException;
 import com.girludev.demoparkapi.exception.UserIdEntityNotFoundException;
 import com.girludev.demoparkapi.exception.UsernameUniqueViolationException;
@@ -34,7 +35,7 @@ public class ApiExceptionHandler {
                         ex.getMessage()));
     }
 
-    @ExceptionHandler(UsernameUniqueViolationException.class)
+    @ExceptionHandler({UsernameUniqueViolationException.class, CpfUniqueViolationException.class})
     public ResponseEntity<ErrorMessage> usernameUniqueViolationException(RuntimeException ex, HttpServletRequest request){
         log.error("api Error", ex);
         return ResponseEntity.status(HttpStatus.CONFLICT).contentType(MediaType.APPLICATION_JSON).body(new ErrorMessage(request,HttpStatus.CONFLICT, ex.getMessage()));
@@ -50,4 +51,5 @@ public class ApiExceptionHandler {
         log.error("api Error", ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType.APPLICATION_JSON).body(new ErrorMessage(request,HttpStatus.BAD_REQUEST, ex.getMessage()));
     }
+
 }
