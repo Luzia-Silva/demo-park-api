@@ -1,3 +1,3 @@
-insert into users (id, username, password, role) values (100, 'aluziagabriela@gmail.com', '12345782', 'ROLE_ADMIN');
-insert into users  (id, username, password, role) values (101, 'aluziagabrielaOne@gmail.com', '12345856', 'ROLE_ADMIN');
-insert into users (id, username, password, role) values (102, 'aluziagabrielaTwo@gmail.com', '12345212', 'ROLE_ADMIN');
+insert into users (id, username, password, role) values (100, 'aluziagabriela@gmail.com', '$2a$12$ti2fVqtHZR4ctuuIFRGJ6OUyq479VfeiDL.cM1zOYDZuJnLWTPWFK', 'ROLE_ADMIN');
+insert into users  (id, username, password, role) values (101, 'bia@gmail.com', '$2a$12$ti2fVqtHZR4ctuuIFRGJ6OUyq479VfeiDL.cM1zOYDZuJnLWTPWFK', 'ROLE_CLIENTE');
+insert into users (id, username, password, role) values (102, 'aluziagabrielaTwo@gmail.com', '$2a$12$ti2fVqtHZR4ctuuIFRGJ6OUyq479VfeiDL.cM1zOYDZuJnLWTPWFK', 'ROLE_ADMIN');
