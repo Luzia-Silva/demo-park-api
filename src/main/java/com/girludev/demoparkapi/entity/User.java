@@ -10,7 +10,6 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -31,8 +30,8 @@ public class User  {
 	private String password;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "role", nullable = false, length = 25)
-	private Role  role = Role.ROLE_CLIENTE;
+	@Column(name = "role", nullable = false, length = 100)
+	private Role  role = Role.ROLE_CUSTOMER;
 
 	@CreatedDate
 	@Column(name = "creation_date")
@@ -51,7 +50,7 @@ public class User  {
 	private String modified_by;
 	
 	public enum Role {
-		ROLE_ADMIN, ROLE_CLIENTE
+		ROLE_ADMIN, ROLE_CUSTOMER
 	}
 	
 	@Override

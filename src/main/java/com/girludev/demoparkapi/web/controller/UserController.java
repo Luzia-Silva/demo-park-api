@@ -2,10 +2,10 @@ package com.girludev.demoparkapi.web.controller;
 
 import com.girludev.demoparkapi.entity.User;
 import com.girludev.demoparkapi.service.UserService;
+import com.girludev.demoparkapi.web.dto.mapper.UserMapper;
 import com.girludev.demoparkapi.web.dto.user.UserCreateDTO;
 import com.girludev.demoparkapi.web.dto.user.UserPasswordDTO;
 import com.girludev.demoparkapi.web.dto.user.UserResponseDTO;
-import com.girludev.demoparkapi.web.dto.mapper.UserMapper;
 import com.girludev.demoparkapi.web.exception.ErrorMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -30,7 +30,7 @@ public class UserController {
 
 	private final UserService userService;
 
-	@Operation(summary = "Search users", description="Restricted request requires a Bearer Token (ADMIN)",
+	@Operation(summary = "Search users", description="Restricted request requires a Bearer Token admin",
 			security = @SecurityRequirement(name = "security"),
 			responses = {
 			@ApiResponse(responseCode = "200",
@@ -68,7 +68,7 @@ public class UserController {
 	}
 
 
-	@Operation(summary = "Search user by id", description="Restricted request requires a Bearer Token (ADMIN/CLIENT)",
+	@Operation(summary = "Search user by id", description="Restricted request requires a Bearer Token admin and customers",
 			security = @SecurityRequirement(name = "security"), responses = {
 			@ApiResponse(responseCode = "200",
 					description = "Resource to search user.",
@@ -81,14 +81,14 @@ public class UserController {
 					content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
 	})
 	@GetMapping("/{id}")
-	@PreAuthorize("hasRole('ADMIN') OR hasRole('CLIENTE') AND #id == authentication.principal.id ")
+	@PreAuthorize("hasRole('ADMIN') OR hasRole('CUSTOMER') AND #id == authentication.principal.id ")
 	public ResponseEntity<UserResponseDTO> getById(@PathVariable Long id){
 		User userById = userService.searchById(id);
 		return ResponseEntity.ok(UserMapper.toUserResponse(userById));
 	}
 
 
-	@Operation(summary = "Upgrade password user", description="Restricted request requires a Bearer Token (ADMIN/CLIENT)", security = @SecurityRequirement(name = "security"),  responses = {
+	@Operation(summary = "Upgrade password user", description="Restricted request requires a Bearer Token admin and customers", security = @SecurityRequirement(name = "security"),  responses = {
 			@ApiResponse(responseCode = "204",
 					description = "Resource to new password user."),
 			@ApiResponse(responseCode = "403",
@@ -102,14 +102,14 @@ public class UserController {
 					content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
 	})
 	@PatchMapping("/{id}")
-	@PreAuthorize("hasAnyRole('ADMIN', 'CLIENTE') AND (#id == authentication.principal.id)")
+	@PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER') AND (#id == authentication.principal.id)")
 	public ResponseEntity<Void> updatePassword(@PathVariable Long id,@Valid @RequestBody UserPasswordDTO passwordDTO){
 		userService.passwordEdit(id, passwordDTO.getPassword(), passwordDTO.getNewPassword(), passwordDTO.getConfirmPassword());
 		return ResponseEntity.noContent().build();
 	}
 
 
-	@Operation(summary = "Delete user", description="Restricted request requires a Bearer Token (ADMIN)",
+	@Operation(summary = "Delete user", description="Restricted request requires a Bearer Token admin",
 			security = @SecurityRequirement(name = "security"),
 			responses = {
 			@ApiResponse(responseCode = "200",

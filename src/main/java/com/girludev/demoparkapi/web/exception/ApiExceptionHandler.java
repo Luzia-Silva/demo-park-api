@@ -1,9 +1,6 @@
 package com.girludev.demoparkapi.web.exception;
 
-import com.girludev.demoparkapi.exception.CpfUniqueViolationException;
-import com.girludev.demoparkapi.exception.PasswordInvalidException;
-import com.girludev.demoparkapi.exception.UserIdEntityNotFoundException;
-import com.girludev.demoparkapi.exception.UsernameUniqueViolationException;
+import com.girludev.demoparkapi.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -40,7 +37,7 @@ public class ApiExceptionHandler {
         log.error("api Error", ex);
         return ResponseEntity.status(HttpStatus.CONFLICT).contentType(MediaType.APPLICATION_JSON).body(new ErrorMessage(request,HttpStatus.CONFLICT, ex.getMessage()));
     }
-    @ExceptionHandler(UserIdEntityNotFoundException.class)
+    @ExceptionHandler({UserIdEntityNotFoundException.class, CustomerIdEntityNotFoundException.class})
     public ResponseEntity<ErrorMessage> userIdEntityNotFoundException(RuntimeException ex, HttpServletRequest request){
         log.error("api Error", ex);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).contentType(MediaType.APPLICATION_JSON).body(new ErrorMessage(request,HttpStatus.NOT_FOUND, ex.getMessage()));
