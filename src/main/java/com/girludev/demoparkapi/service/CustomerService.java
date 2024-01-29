@@ -33,10 +33,13 @@ public class CustomerService {
                 () -> new CustomerIdEntityNotFoundException("Customer not found")
         );
     }
-
-
     @Transactional
     public Page<CustomerProjection> findAll(Pageable pageable) {
         return customerRepository.findAllPageable(pageable);
+    }
+
+    @Transactional
+    public Customer searchByUserId(Long id) {
+        return customerRepository.findByUserId(id);
     }
 }
