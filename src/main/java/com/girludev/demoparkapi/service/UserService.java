@@ -1,11 +1,11 @@
 package com.girludev.demoparkapi.service;
 
 import com.girludev.demoparkapi.entity.User;
+import com.girludev.demoparkapi.exception.EntityNotFoundException;
 import com.girludev.demoparkapi.exception.PasswordInvalidException;
 import com.girludev.demoparkapi.exception.UserIdEntityNotFoundException;
 import com.girludev.demoparkapi.exception.UsernameUniqueViolationException;
 import com.girludev.demoparkapi.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;

@@ -58,7 +58,7 @@ public class CustomerController {
     public ResponseEntity<CustomerResponseDTO> create(@RequestBody @Valid
                                                       CustomerCreateDTO customerCreateDTO,
                                                       @AuthenticationPrincipal JwtUserDetails userDetails){
-        Customer customer = CustomerMapper.toCustomertCreate(customerCreateDTO);
+        Customer customer = CustomerMapper.toCustomertCreateDTO(customerCreateDTO);
         customer.setUser(userService.searchById(userDetails.getId()));
         customerService.save(customer);
         return ResponseEntity.status(201).body(CustomerMapper.toCustomerResponse(customer));

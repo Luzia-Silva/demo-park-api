@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class UserMapper {
-	public static User toUserCreate(UserCreateDTO createDTO){
+	public static User toUserCreateDTO(UserCreateDTO createDTO){
 		return new ModelMapper().map(createDTO, User.class);
 	}
 	

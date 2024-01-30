@@ -36,15 +36,12 @@ public class User  {
 	@CreatedDate
 	@Column(name = "creation_date")
 	private LocalDateTime creation_date;
-
 	@LastModifiedDate
 	@Column(name = "modification_date")
 	private LocalDateTime dmodification_date;
-
 	@CreatedBy
 	@Column(name = "created_by")
 	private String created_by;
-
 	@LastModifiedBy
 	@Column(name = "modified_by")
 	private String modified_by;

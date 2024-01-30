@@ -13,26 +13,23 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 @Entity
-@Table(name = "customers")
+@Table(name = "vacancies")
 @EntityListeners(AuditingEntityListener.class)
-public class Customer implements Serializable {
-
+public class Vacancy implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false, length = 100)
-    private String name;
+    @Column(name = "code", nullable = false, unique = true, length = 4)
+    private String code;
 
-    @Column(name = "cpf", nullable = false, unique = true, length = 11)
-    private String cpf;
-
-    @OneToOne // Chave estrangeira de um para um
-    @JoinColumn(name = "id_user", nullable = false) // Join na tabela user
-    private User user;
+    @Column(name = "status", nullable = false, length = 4)
+    @Enumerated(EnumType.STRING)
+    private StatusVacancy status;
 
     @CreatedDate
     @Column(name = "creation_date")
@@ -46,4 +43,20 @@ public class Customer implements Serializable {
     @LastModifiedBy
     @Column(name = "modified_by")
     private String modified_by;
+    public enum StatusVacancy {
+        FREE,
+        BUSY
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vacancy vacancy = (Vacancy) o;
+        return Objects.equals(id, vacancy.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

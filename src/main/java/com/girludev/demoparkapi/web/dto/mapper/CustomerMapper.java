@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CustomerMapper {
-    public static Customer toCustomertCreate(CustomerCreateDTO customerCreateDTO){
+    public static Customer toCustomertCreateDTO(CustomerCreateDTO customerCreateDTO){
         return new ModelMapper().map(customerCreateDTO, Customer.class);
     }
 
